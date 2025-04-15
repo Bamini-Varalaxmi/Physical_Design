@@ -191,7 +191,7 @@ The **set_clock_tree_options** command assigns shielding rules to clock nets onl
 
 
 ## Q. calculating delay through any net? 
-**To get a detailed report on the delay calculation at a given point along a timing path, use the
+**TTo get a detailed report on the delay calculation at a given point along a timing path, use the
 report_delay_calculation command. This is the command syntax:
 report_delay_calculation
 -from from_pin -to to_pin
@@ -199,7 +199,10 @@ report_delay_calculation
 [-nosplit]
 [-crosstalk]
 [-from_rise_transition value]
-[-from_fall_transition value]**
+[-from_fall_transition value]
+Specify the “from” and “to” pins of the cell or net that you want to report. These two pins can
+be the input and output pins of a cell to report the calculation of a cell delay, or can be the
+driver pin and a load pin of a net to report the calculation of a net delay.**
 
 
 ## Q. How many Modes, corners and scenarions there?
