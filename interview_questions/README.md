@@ -206,5 +206,143 @@ driver pin and a load pin of a net to report the calculation of a net delay.**
 
 
 ## Q. How many Modes, corners and scenarions there?
-## setting operating conditions?
+## Q. setting operating conditions?
 **set_operating_conditions -max WORST -max_library Typ.db -min BEST -min_library HoldTyp.db**
+## report_timing options?
+report_timing Command Options
+The report_timing command offers a large number of options to control the scope of the
+design that is reported, the number of paths to report, and the types of path information to
+include in the report. This is the full syntax of the command:
+report_timing
+[-to to_list] [-rise_to to_list] [-fall_to to_list]
+[-from from_list] [-rise_from from_list] [-fall_from from_list]
+[-exclude exclude_list]
+[-rise_exclude exclude_list] [-fall_exclude exclude_list]
+[-through through_list]
+[-rise_through through_list]
+[-fall_through through_list]
+[-path_type
+full | end | only | short | start | full_clock | full_clock_expanded]
+[-delay_type min | min_rise | min_fall | max | max_rise | max_fall]
+[-nworst paths_per_endpoint]
+[-max_paths max_path_count]
+[-input_pins]
+[-nets]
+[-transition_time]
+[-crosstalk_delta]
+[-capacitance]
+[-effective_capacitance]
+[-lesser_path max_path_delay]
+[-greater_path min_path_delay]
+[-slack_greater_than greater_slack_limit]
+[-slack_lesser_than lesser_slack_limit]
+[-loops]
+[-enable_preset_clear_arcs]
+[-significant_digits digits]
+[-nosplit]
+[-unique_pins]
+[-start_end_pair]
+[-physical]
+[-attributes]
+[-sort_by group | slack]
+[-normalized_slack]
+[-group group_name]
+[-derate]
+[-temperature]
+[-voltage]
+[-trace_latch_borrow]
+[-scenario scenario_list]
+By default, the report_timing command by itself, without any options, reports the single
+worst maximum-delay (setup) path in each path group. Therefore, the number of paths
+reported is equal to the number of path groups. By default, there is one path group per clock
+used in the design.
+Scope of the Design Reported
+The -from, -through, and -to options restrict the scope of the report to only those paths
+that start, pass through, and end at the specified objects in the design. The options
+-rise_from, -fall_to, and so on, further restrict the scope to only those paths that have
+a rising-edge signal at the startpoint, a falling-edge signal at the endpoint, and so on. The
+specified object can be a clock, a port, or a pin of a launch or capture cell.
+For example, the following command restricts the scope of the report to only those paths that
+start and end at specified objects:
+##### prompt> report_timing -from [get_pins reg08/CP] -to [get_clocks CLK1]
+This command reports the single path having the worst maximum-delay (setup) slack that
+starts with a rising-edge signal at the CP pin of cell reg08 and ends at a register or port
+clocked by CLK1.
+You can use (or not use) any combination of -from, -through, and -to type options. For
+details, see “Path Specification Methods” on page 3-4.
+To restrict the scope of the report to a particular path group, use the -group option. For
+example, to report only the paths in the CLK1 path group,
+##### prompt> report_timing -group CLK1
+By default, paths are divided into groups according to the endpoint clock. For example, a
+design that has clocks named CLK1 and CLK2 has two path groups named CLK1 and
+CLK2. You can also specify your own path grouping with the group_path command.
+To exclude all paths from the report that start from, pass through, or end at specified pins,
+ports, nets, or cells, use the -exclude , -rise_exclude, or -fall_exclude option. For
+example, to exclude all paths containing the net n234 from reporting, use the following
+command:
+##### prompt> report_timing -exclude [get_nets n234]
+##### Path Details Reported
+By default, each line of the path report shows the point along the path, the incremental
+contribution to the delay of the point, and the cumulative delay up to that point. Each point
+includes both the cell and net delay from the previous point. For example,
+##### prompt> report_timing
+![image](https://github.com/user-attachments/assets/a5dc9905-6aca-4336-9364-681ead3c59be)
+To display the net names associated with the timing points, use the -nets option:
+##### prompt> report_timing -nets
+![image](https://github.com/user-attachments/assets/8758af27-22ac-4a97-a23e-3a91ee0d9042)
+To display net delays separately from the cell delays, use the -input_pins option, which
+lists the cell input pins as well as the cell output pins as timing points:
+##### prompt> report_timing -input_pins -significant_digits 5
+![image](https://github.com/user-attachments/assets/1a5aa9e2-30b1-4ece-b631-ea219e71bc7f)
+The incremental delay leading up to a cell input is a net delay. The incremental delay leading
+up to a cell output is the cell delay.
+To display the signal transition time at each timing point, use the -transition_time option:
+##### prompt> report_timing -transition_time
+![image](https://github.com/user-attachments/assets/19a4648d-79a3-4c01-b787-a34b011b0239)
+Similarly, use the -capacitance option to display the net capacitance, -physical to display
+the physical locations of the driver and load pins, and so on. You can combine multiple
+options of this type in a single command. The tool increases the number of columns in the
+report as needed.
+The -path option specifies what type of timing points are included in the path report. It can
+be set to short, full, full_clock, full_clock_expanded, only, or end. The default
+report type is full.
+A full_clock report is like a full report, except that it also reports the timing points in the
+clock paths leading up to the launch and capture devices. A full_clock_expanded report
+is like a full_clock report, except that it also reports the timing points between a primary
+source clock and a generated clock. For example,
+##### prompt> report_timing
+![image](https://github.com/user-attachments/assets/85d5823f-fa00-493a-abda-da8686bb83c9)
+##### prompt> report_timing -path full_clock
+![image](https://github.com/user-attachments/assets/3ac06e2b-4e3b-430d-a8ca-5b5d9e24fda1)
+A short report shows only the startpoint and endpoint, omitting the intermediate points. An
+only report shows the data path only and omits the required-time and slack calculation.
+An end report shows only the endpoint, delay, required time, and slack in a single line, but
+all endpoints are reported instead of just the single worst path per path group. The -path
+end option is typically used with the -nworst option to restrict the report length. For
+example,
+##### prompt> report_timing -path end -max_paths 5
+![image](https://github.com/user-attachments/assets/4b6efa9c-a1e4-439b-86d5-3c1f71f8f77f)
+##### Delay Type (Min/Max) Reported
+By default, the report_timing command reports the path or paths having the worst
+maximum-delay (setup) slack resulting from the longest delays and earliest required times.
+To get a report on the paths having the worst minimum-delay (hold) slack instead, use the
+-delay min option. In that case, the command looks for the shortest delays and latest
+required times. The minimum-delay slack is the arrival time minus the required time.
+You can use the -delay min_rise, -delay max_fall, and similar options to restrict the
+scope of the report to just rising or just falling edges of the data signal at the path endpoint.
+##### Number of Paths Reported
+The -nworst and -max_paths options control the number of paths reported. The -nworst
+option specifies the number of paths reported per endpoint. The -max_paths option
+specifies the number of paths reported per path group.
+For example, the following command reports the eight worst maximum-delay paths per path
+group, but no more than two paths per endpoint:
+##### prompt> report_timing -nworst 2 -max_paths 8
+If the three worst maximum-delay paths in a path group have the same endpoint, only the
+first two are reported; the third-worst path reported must have a different endpoint in the path
+group.
+The -slack_lesser_than and -slack_greater_than options restrict the report to paths
+that have slack values within the specified range. For example, the following command lists
+up to 50 worst maximum-delay paths per path group that have a slack less than 0.5:
+##### prompt> report_timing -path end -max_paths 50 -slack_lesser_than 0.5
+The command reports the paths in order of slack, starting with the worst path, and continues
+until 50 paths have been reported or until the slack exceeds 0.5 time units.
