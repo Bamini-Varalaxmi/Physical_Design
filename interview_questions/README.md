@@ -454,6 +454,10 @@ Allows the creation of much smaller and denser features on chips.
 
 But it Adds extra steps to the manufacturing process and expensive.
 Requires careful planning to make the two masks align perfectly
+
+create_track_pattern -layer M1 -site uint -type uniform -direction vertical -mas_pattern {mask_two mask_one} spacing 0.074 -offesets 0.037
+![image](https://github.com/user-attachments/assets/0a18b921-57f1-4002-85b1-e71ffc4dc151)
+
 ## Q. what is the difference between PnR routing and signoff routing?
 **signoff routing** is with accurate parasitic extraction (SPEF).Focuses on SI, EM and extraction accuracy. It only analyzes existing routes
 
