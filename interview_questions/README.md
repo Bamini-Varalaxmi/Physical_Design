@@ -11,7 +11,7 @@ This file contains my intervew experience on most commonly asked VLSI physical D
 - Module splitting i.e., not applying bonds as needed
 ## What are the congestion Fixes? 
 ### 1. Adding placement blockages in  channels and around macro corners
-##### icc_shell> create_placement_blockage -bbox {10 20 100 200}
+##### ##### icc_shell> create_placement_blockage -bbox {10 20 100 200}
 #####            create_placement_blockage -name ICC_THIN_CHAN_PLACE_BLKG_#0 -type hard -bbox { 425.565 815.215 883.790 823.215}
 to create a hard placement blockage in the area enclosed by a rectangle with corners at (10, 20) and (100, 200)
 Defining a Hard Macro Blockage
@@ -21,13 +21,13 @@ To define a hard macro blockage, specify the bounding box, type (-no_hard_macro 
 and optionally the name for the placement blockage.
 For example, to define a hard macro blockage enclosed by a rectangle with corners at (120,
 75) and (230, 200), use the following command:
-###### icc_shell> create_placement_blockage -bbox {120 75 230 200} -no_hard_macro
+###### ##### icc_shell> create_placement_blockage -bbox {120 75 230 200} -no_hard_macro
 Defining a Soft Placement Blockage
 To define a soft blockage, specify the boundary, type (-type soft option), and optionally the
 name for the placement blockage.
 For example, to define a soft blockage enclosed by a rectangle with corners at (120, 75) and
 (230, 200), use the following command:
-##### icc_shell> create_placement_blockage -bbox {120 75 230 200} -type soft
+##### ##### icc_shell> create_placement_blockage -bbox {120 75 230 200} -type soft
 Defining a Partial Placement Blockage
 To define a partial blockage, specify the boundary, type (-type partial option), blockage
 percentage (-blocked_percentage option), and optionally the name for the placement
@@ -35,7 +35,7 @@ blockage.
 For example, to define a partial blockage with a maximum allowed cell density of 60 percent
 (a blocked percentage of 40), enclosed by the rectangle with corners at (10, 20) and (100,
 200), use the following command:
-icc_shell> create_placement_blockage -bbox {10 20 100 200} \
+##### icc_shell> create_placement_blockage -bbox {10 20 100 200} \
 -type partial -blocked_percentage 40
 Note:
 To allow unlimited usage of a partial blockage area, specify a blockage percentage of
@@ -50,14 +50,14 @@ inverters to be placed within the blockage. To create a buffer-only blockage, us
 -type partial, –blocked_percentage, and -buffer_only options.
 For example, to define a partial blockage that allows only the placement of buffers and
 inverters, with a cell density of 30 percent, use the following commands:
-##### icc_shell> create_placement_blockage -bbox {10 20 100 200} -type partial -blocked_percentage 70 -buffer_only
+##### ##### icc_shell> create_placement_blockage -bbox {10 20 100 200} -type partial -blocked_percentage 70 -buffer_only
 No-register
 A no-register blockage is a special type of partial blockage that prevents registers from
 being placed within the blockage. To create a no-register blockage, use the -type
 partial, –blocked_percentage, and -no_register options.
 For example, to define a partial blockage that excludes registers, but allows a cell density
 of 50 percent for other cells, use the following commands:
-##### icc_shell> create_placement_blockage -bbox {10 20 100 200} -type partial -blocked_percentage 50 -no_register
+##### ##### icc_shell> create_placement_blockage -bbox {10 20 100 200} -type partial -blocked_percentage 50 -no_register
 ### 2. Review the macro placement
 ### 3. Redusing local cell density using density screens, density screen is applied to limit the density of standard cells in an area to reduce congestion due to high pin density
 ### 4. reordering scan chain to reduce congestion
@@ -96,7 +96,7 @@ To define a soft move bound, use the following syntax:
 For example, to create a rectangular soft move bound for the INST_1 cell instance with
 its lower-left corner at (100, 100) and its upper-right corner at (200, 200), use the
 following command:
-##### icc_shell> create_bounds -name b1 -coordinate {100 100 200 200} INST_1
+##### ##### icc_shell> create_bounds -name b1 -coordinate {100 100 200 200} INST_1
 •Hard move bounds
 For hard move bounds, the tool must place the cells within the specified region.
 To define a hard move bound, use the following syntax:
@@ -116,10 +116,10 @@ Keepout Margin in the GUI). This is the full command syntax:
 ##### [object_list]
 ##### [-north]
 For example,
-##### icc_shell> set_keepout_margin -type hard -all_macros -outer {10 10 10 10}
-##### icc_shell> set_keepout_margin -type soft -all_macros -outer {10 10 10 10}
+##### ##### icc_shell> set_keepout_margin -type hard -all_macros -outer {10 10 10 10}
+##### ##### icc_shell> set_keepout_margin -type soft -all_macros -outer {10 10 10 10}
 ##### icc2_shell> create_kepout_margin -type hard -outer {1.48 1.2 148 1.2} [get_cells -physical_context -filter design_type==macro]
-##### icc_shell> create_keepout_margin -type hard [get_cells *AOI]
+##### ##### icc_shell> create_keepout_margin -type hard [get_cells *AOI]
 #####                                             [get_cells *OAI]
 Use -type hard or -type soft to specify the type of keepout, either hard or soft. 
 ##### The default is hard keepout margin. 
@@ -140,7 +140,7 @@ derived margins, the -all_macros, -macro_masters, and -macro_instances options a
 not allowed. The derived margins are subject the minimum and maximum values specified
 by the -min_padding_per_macro and -max_padding_per_macro options. Here is an
 example:
-icc_shell> set_keepout_margin -tracks_per_macro_pin 0.6 \
+##### icc_shell> set_keepout_margin -tracks_per_macro_pin 0.6 \
 -min_padding_per_macro 0.1 -max_padding_per_macro 0.2
 To report the cell-specific keepout margins in your design, use the
 ##### report_keepout_margin. 
@@ -178,7 +178,7 @@ To define shielding rules, use the -shield_spacings and -shield_widths options o
 the define_routing_rule command. For example, to specify a shielding rule that uses
 spacing of 0.1 microns and width of 0.1 microns for metal1 through metal5 and spacing
 of 0.3 microns and width of 0.3 microns for metal6, enter the following command:
-##### icc_shell> define_routing_rule shield_rule -shield_widths {M1 0.1 M2 0.1 M3 0.1 M4 0.1 M5 0.1 M6 0.3} -shield_spacings {M1 0.1 M2 0.1 M3 0.1 M4 0.1 M5 0.1 M6 0.3}
+##### ##### icc_shell> define_routing_rule shield_rule -shield_widths {M1 0.1 M2 0.1 M3 0.1 M4 0.1 M5 0.1 M6 0.3} -shield_spacings {M1 0.1 M2 0.1 M3 0.1 M4 0.1 M5 0.1 M6 0.3}
 ote:
 The **set_clock_tree_options** command assigns shielding rules to clock nets only **before clock tree synthesis**. 
 **After clock tree synthesis**, you must use the **set_net_routing_rule** command to assign shielding rules to clock nets.
@@ -346,3 +346,116 @@ up to 50 worst maximum-delay paths per path group that have a slack less than 0.
 ##### prompt> report_timing -path end -max_paths 50 -slack_lesser_than 0.5
 The command reports the paths in order of slack, starting with the worst path, and continues
 until 50 paths have been reported or until the slack exceeds 0.5 time units.
+
+## Q. what is multipoint?
+MultiPoint CTS is a hybrid method of conventional CTS and clock mesh. The structure is shown in fig 1, which consists of a mesh driven by a pre-mesh tree. Multi Point drivers connect to the mesh at a limited number of locations referred to as taps. A multi-point clock tree structure driven by the mesh consists of subtrees, each driven by a tap.
+![image](https://github.com/user-attachments/assets/fc62a037-aac9-4336-8e99-ca0c6f0f695d)
+
+
+## Q. Difference between the add_buffer_on_route and insert_buffer?
+##### Use-case:
+
+After CTS or routing, when long nets need segmentation due to slew/degradation.
+
+You want minimal disruption to logical connectivity.
+
+
+Adding Repeater Cells on Routed Nets
+To add repeater cells on a fully routed net, use the add_buffer_on_route command.
+When you use this command, you must specify the following information:
+•The net on which to add the repeater cells
+•The library cell to use for the repeater cells
+By default, the tool assumes that the library cell you specify is a buffer. To add pairs of
+inverters as repeater cells instead of buffers, use the -inverter_pair option.
+The following example shows how to add pairs of inverters as repeater cells on the net4
+net using the mylib/INV1 library cell.
+##### icc_shell> add_buffer_on_route net4 [get_lib_cells mylib/INV1] \
+-inverter_pair -repeater_distance 100
+•
+The location to add the repeater cells
+You specify the repeater cell locations by using one of the following methods:
+❍
+Exact locations
+To specify the locations of the repeater cells, use the -location option. When you
+specify an exact location, you can also specify a layer with an existing routing shape
+at that location to connect the repeater cell to.
+The following example adds the mylib/BUF1 library cell as a repeater cell on the net1
+net at location (100, 200) and connects it to an existing route shape on the M4 layer.
+##### icc_shell> add_buffer_on_route net1 [get_lib_cells mylib/BUF1] \
+-location {100 200 M4}
+❍
+Fixed intervals
+To specify the distance in microns between the repeater cells, use the
+-repeater_distance option. To specify the distance in microns between the driver
+of the net and the first repeater cell, use the -first_distance option.
+The following example adds the mylib/BUF1 library cell as a repeater cell on the net2
+net at an interval of 150 microns. The distance between the driver and the first
+repeater cell is 100 microns.
+##### ##### icc_shell> add_buffer_on_route net2 [get_lib_cells mylib/BUF1] -first_distance 100 -repeater_distance 150
+❍
+Relative intervals
+To specify the distance between the repeater cells as a ratio of the total net length,
+use the -repeater_distance_length_ratio option. To specify the distance
+between the driver and the first repeater as a ratio of the total net length, use the
+-first_distance_length_ratio option.
+The following example adds the mylib/BUF1 library cell as a repeater cell on the net3
+net at an interval that is 20 percent of the total net length. The distance between the
+driver and the first repeater cell is 10 percent of the total net length.
+##### ##### icc_shell> add_buffer_on_route net3 [get_lib_cells mylib/BUF1] \
+-first_distance_length_ratio 0.1 \
+-repeater_distance_length_ratio 0.2
+Instead of specifying the library cells to use and their locations as exact locations, fixed
+intervals, or relative intervals, you can specify an exact configuration of repeater cells to
+insert by using the -user_specified_buffers option.
+When you use the -user_specified_buffers option, for each repeater cell, you must
+specify the instance name, the library cell to use, the x- and y-coordinates of the exact
+location, and a layer at that location with an existing routing shape to connect to. You can
+insert different types of buffers or inverter pairs by using this option, but you cannot combine
+both buffers and inverter pairs.
+The following example adds two repeater cells named ECO1 and ECO2 on net n22. The
+ECO1 cell is of type BUF2, at location (100, 70), connecting to a routing shape on the M3
+layer. The ECO2 cell is of type BUF4, at location (150, 70), also connecting to a routing
+shape on the M3 layer.
+##### icc_shell> add_buffer_on_route net22 \
+-user_specified_buffers {ECO1 BUF2 100 70 M3 ECO2 BUF4 150 70 M3}
+By default, the add_buffer_on_route command
+•
+Adds repeater cells over placement blockages, soft macros, and hard macros.
+To prevent this, use the -respect_blockages option.
+•
+Adds repeater cells on both global routed and detail routed nets.
+To add cells only on nets that are global routed only, without assigned tracks or detail
+routing, use the -only_global_routed_nets option.
+
+
+#### insert_buffer
+Manually insert a prototype driver on the clock-mesh net by using the insert_buffer
+command, as shown in the following example:
+##### icc_shell> insert_buffer [get_nets CLK] my_lib/clkbuff10 -new_cell_names TAP
+
+adding buffer at RS pin  
+##### icc_shell> insert_buffer -lib_cell SAEDRVT10_BUF_2 -new_net_names hold_fix -cell_names hold_fix_inst pwCtrl/inst_stat_reg_reg0/RS
+##### Use-case:
+
+During synthesis or floorplanning/placement stages, to reduce fanout or meet setup/hold requirements.
+
+For proper clock tree synthesis or early timing optimization.
+
+## Q. what is Double Patterning?
+In doube patterning Method dense patterns of metals in a single mask is split into 2 different masks that can be interleaved/ spread to get the original pattern as desired.
+
+Double patterning is a technique to overcome diffraction Problem during the lithography process in chip manufacturing . Instead of trying to create all the tiny features at once, it splits the process.
+- First : The mask is designed to create only half of the features, with enough space between them to avoid diffraction problems.
+- Second : A second mask, with a different pattern, is used to create the other half of the features. These features are carefully fit in the gaps left by the first exposure.
+It's like drawing a complex picture in two stages, first drawing some lines and then going back to fill in the rest.
+
+Allows the creation of much smaller and denser features on chips.
+ * It Leads to more powerful and efficient chips.
+
+But it Adds extra steps to the manufacturing process and expensive.
+Requires careful planning to make the two masks align perfectly
+## Q. what is the difference between PnR routing and signoff routing?
+**signoff routing** is with accurate parasitic extraction (SPEF).Focuses on SI, EM and extraction accuracy. It only analyzes existing routes
+
+**PnR Routing**focusses on Meeting timing (setup/hold), DRC clean routing & Optimal wirelength and congestion reduction. Some corner cases might not be fully optimized (e.g., coupling, signal integrity).Some shortcuts are taken to prioritize runtime and convergence. It actually routes the nets
+Goal:Functional and timing-correct layout	
