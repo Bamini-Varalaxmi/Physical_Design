@@ -208,7 +208,7 @@ driver pin and a load pin of a net to report the calculation of a net delay.**
 ## Q. How many Modes, corners and scenarions there?
 ## Q. setting operating conditions?
 **set_operating_conditions -max WORST -max_library Typ.db -min BEST -min_library HoldTyp.db**
-## report_timing options?
+## Q. report_timing options?
 report_timing Command Options
 The report_timing command offers a large number of options to control the scope of the
 design that is reported, the number of paths to report, and the types of path information to
@@ -281,7 +281,7 @@ ports, nets, or cells, use the -exclude , -rise_exclude, or -fall_exclude option
 example, to exclude all paths containing the net n234 from reporting, use the following
 command:
 ##### prompt> report_timing -exclude [get_nets n234]
-##### Path Details Reported
+Path Details Reported
 By default, each line of the path report shows the point along the path, the incremental
 contribution to the delay of the point, and the cumulative delay up to that point. Each point
 includes both the cell and net delay from the previous point. For example,
@@ -463,3 +463,12 @@ create_track_pattern -layer M1 -site uint -type uniform -direction vertical -mas
 
 **PnR Routing**focusses on Meeting timing (setup/hold), DRC clean routing & Optimal wirelength and congestion reduction. Some corner cases might not be fully optimized (e.g., coupling, signal integrity).Some shortcuts are taken to prioritize runtime and convergence. It actually routes the nets
 Goal:Functional and timing-correct layout	
+
+## Q. Types of clocks?
+    Master clock
+    Generated clock
+    Virtual clock
+## Q. Types of latencies?
+    Propagated latency
+    source latency
+## Q. Types of Clock Sources?
