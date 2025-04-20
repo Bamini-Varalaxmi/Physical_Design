@@ -186,8 +186,10 @@ The **set_clock_tree_options** command assigns shielding rules to clock nets onl
 ## Q. creating corners?
    **create_corner slow**
 ######             fast
-   **create_mode** 
-   **create_scenario -name scenario_name -c corner_name -m mode_name**
+   **create_mode func**
+   **current_mode func** 
+   **create_scenario -mode func -corner fast -name func_fast**
+   **create_scenario  -mode func -corner slow -name func_slow**
 
 
 ## Q. calculating delay through any net? 
@@ -206,6 +208,10 @@ driver pin and a load pin of a net to report the calculation of a net delay.**
 
 
 ## Q. How many Modes, corners and scenarions there?
+Functional Mode: checking the functionality from one flop to other flop with high frequency clock
+Scan Mode: Applying the test vector to the input to test flop functionality
+Scan Capture Mode: Applying the test vectors to the input are to test the logical circuit present in between the flop. Uses same frequency as functionality frequency clock, if the functionality mode timing is clean then scan capture is also clean.
+Memory Built in self test: testing the circuit which is present inside the memory. Uses low frequency clock
 ## Q. setting operating conditions?
 **set_operating_conditions -max WORST -max_library Typ.db -min BEST -min_library HoldTyp.db**
 ## Q. report_timing options?
@@ -465,10 +471,41 @@ create_track_pattern -layer M1 -site uint -type uniform -direction vertical -mas
 Goal:Functional and timing-correct layout	
 
 ## Q. Types of clocks?
-    Master clock
-    Generated clock
-    Virtual clock
+    Master clock:
+    Generated clock:
+    Virtual clock:
+    scan clock:
 ## Q. Types of latencies?
-    Propagated latency
-    source latency
+Clock Latency
+Latency is the amount of time it takes for the clock signal to be propagated from the original
+clock source to the sequential elements in the design, consisting of two components, source
+latency and network latency. 
+- **Source latency**, also known as insertion delay, is the time it
+takes for a clock to be propagated from its ideal waveform origin point to the clock definition
+point in the design. 
+- **Network latency** is the time it takes for a clock to be propagated from the
+clock definition point in the design to a register clock pin.
+ 
+- The total latency at a register clock pin is the sum of the source latency and network latency.
+
+![image](https://github.com/user-attachments/assets/249182e8-a4fc-4594-b2ca-138eab742202)
+-                                                  Source and Network Latency
+
+set_clock_latency
+[-rise] [-fall]
+[-min] [-max]
+[-source]
+[-early] [-late]
+[-clock clock_list]
+delay
+object_list
+
+For example, to set the expected rise latency to 1.2 and the fall latency to 0.9 for CLK, enter
+>> set_clock_latency -rise 1.2 [get_clock CLK]
+>> set_clock_latency -fall [get_clocks CLK]
+![image](https://github.com/user-attachments/assets/b2bf3145-ce62-44f3-917c-c0bb03a8a006)
+-                                Early/Late Source Latency Waveforms
+Removes user-specified clock network or sourceclock latency information from specified objects.
+>>remove_clock_latency 
+
 ## Q. Types of Clock Sources?
