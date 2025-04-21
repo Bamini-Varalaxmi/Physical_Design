@@ -476,7 +476,6 @@ Goal:Functional and timing-correct layout
     Virtual clock:
     scan clock:
 ## Q. Types of latencies?
-Clock Latency
 Latency is the amount of time it takes for the clock signal to be propagated from the original
 clock source to the sequential elements in the design, consisting of two components, source
 latency and network latency. 
