@@ -471,10 +471,17 @@ create_track_pattern -layer M1 -site uint -type uniform -direction vertical -mas
 Goal:Functional and timing-correct layout	
 
 ## Q. Types of clocks?
-    Master clock:
-    Generated clock:
-    Virtual clock:
-    scan clock:
+**Master clock:** These are clocks which get defined at the main clcok source like oscillator/PLL. In a chip, master clock can be defined at some clock input ports too. When we define these master clocks, proper frequency and source information should be given. Uncertainity also should be specified.
+create_clock -name clock -period 4 [get_ports clock]
+**Generated clock:** These are divider/multiplier clocks which get generated from a master clock. Mostly these are defined at the output of a clock divider like flipflop or mux. When we define a generated clock, its source clock, the generation point, division ration and uncertainity value should be provided. Generated clocks can be also defined at any point, if we need to define some exception wrt ths clock.
+create_generated_clock -name scan -period 8 -waveform [0 4] [get_ports clock]
+**Virtual clock:** These are  clocks used to time the input/output port. These are imaginary clocks defines only with the clock wavaform and not having source/generation point.
+- For virtual clocks defined with the same create_clock command, network latency is
+calculated using the clock propagation delay of the boundary registers clocked by the
+individual virtual clocks.
+- To adjust the I/O timing for virtual clocks, you must define the relationships between the virtual clocks and the real clocks before you adjust the I/O timing as follows:
+>> icc_shell> set_latency_adjustment_options -to_clock my_virtual_clock -from_clock my_real_clock
+icc_shell> update_clock_latency
 ## Q. Types of latencies?
 Latency is the amount of time it takes for the clock signal to be propagated from the original
 clock source to the sequential elements in the design, consisting of two components, source
