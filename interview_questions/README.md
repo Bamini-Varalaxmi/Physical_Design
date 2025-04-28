@@ -515,3 +515,48 @@ Removes user-specified clock network or sourceclock latency information from spe
 >>remove_clock_latency 
 
 ## Q. Types of Clock Sources?
+
+
+
+## Q. What is case analysis?
+
+In some designs, certain signals have a constant value in specific modes. For instance, in functional modes, the test signals do not toggle and are therefore tied either to VDD or VSS depending on their active level. This also applies to signals that do not toggle after the design has been powered up. In the same way, today's designs have multiple functional modes and some signals that are active in some of the functional modes might be inactive in other modes.
+
+To help reduce the analysis space, runtime and memory consumption, it is important to let the Static Timing Engine know about the signals that have a constant value. This is also critical to ensure that non-functional paths and irrelevant paths are not reported.
+
+A signal is declared as inactive to the timing engine with the set_case_analysis command. The command applies to pins and/or ports.
+
+Note: After a case analysis is set on a pin, the timing arcs related to that pin are disabled. The timing engine does not report any path going through disabled timing arcs.
+
+The syntax of the set_case_analysis command is:
+##### >> set_case_analysis <value> <pins/ports objects> 
+
+The parameter <value> can be any of the following:
+0, 1, zero, one, rise, rising, fall, or falling
+
+When the values rise, rising, fall, or falling are specified, this means that the given pins or ports should only be considered for timing analysis with the specified transition. The other transition is disabled.
+
+A case value can be set on a port, a pin of a leaf cell, or a pin of a hierarchical module.
+
+In the example below, two clocks are created on the input pins of the multiplexer clock_sel but only clk_2 is propagated through the output pin after setting the constant value on the selection pin S.
+![image](https://github.com/user-attachments/assets/002018ff-149d-4599-a245-22b003362ee7)
+
+create_clock -name clk_1 -period 10.0 [get_pins clock_sel/I0]
+create_clock -name clk_2 -period 15.0 [get_pins clock_sel/I1]
+set_case_analysis 1 [get_pins clock_sel/S]
+
+Reference: https://docs.amd.com/r/2021.2-English/ug903-vivado-using-constraints/Case-Analysis
+
+Case analysis propagates the constant values specified on nets forward (but not backward) through the design.
+
+Case Analysis :– Specifies mode settings with user-specified logic constants or logic transitions on ports or pins.
+
+The most common use of case analysis is to disable a scan chain. Setting the SCAN_MODE port to 0 disables the scan chain. As a result, the scan chain is not reported by the report_timing command.
+
+By setting a logic constant of 0 on the SCAN_MODE port, PrimeTime disables the scanchain that starts at SCAN_IN and ends at SCAN_OUT. PrimeTime disables the scan chain because the logic 0 set on the SCAN_MODE port propagates to the FF1/TE, FF2/TE, FF3/ TE, and FF4/TE pins. A logic constant on the TE pin of each scan flip-flop disables the setup and hold arcs from CP to TI because of the sequential case analysis on the FF1, FF2, FF3, and FF4 cells.
+
+To set case analysis with a 0 value, enter
+##### pt_shell> set_case_analysis 0 [get_ports "SCAN_MODE"]
+![image](https://github.com/user-attachments/assets/946e3ca4-3dca-4dae-ab77-0e3536418e7e)
+
+reference: Prime Time User Gude Page No. 10-4
