@@ -470,27 +470,52 @@ create_track_pattern -layer M1 -site uint -type uniform -direction vertical -mas
 **PnR Routing**focusses on Meeting timing (setup/hold), DRC clean routing & Optimal wirelength and congestion reduction. Some corner cases might not be fully optimized (e.g., coupling, signal integrity).Some shortcuts are taken to prioritize runtime and convergence. It actually routes the nets
 Goal:Functional and timing-correct layout	
 
-## Q. Types of clocks?
+## Q. Types of Clocks?
+The signal which is used to trigger all the sequential elements in the design.
+Types,
+- Synchronous
+- Asynchronous
+- Exclusive
+ **Synchronous Clock:** Two clocks are synchronous with respect to each other if they **share a common source** and have a **fixed phase relationship** and a **common base period**(should have a common multiple).
+  Ex: time period of two clocks: 2 and 6, here the common base period is 2.
+ **Asynchronous clock:** Two clocks are said to be asynchronous if they **do not have a fixed phase relationship** with each other in the design and **don't have a common base period**.
+  Ex: time periodof two clocks: 6 and 7, here there is no common base period
+  **Exclusive clock:**
+  - Two clocks are exclusive if they do not interact with each other.
+  - For instance, a ckt might multiplex two different clock signals onto a clock line, one a fast clock for normal operation and the other a slow clock for low power consumption
+  - Only one of the two clocks is enabled at any given time, so there is no interaction between two clocks.
+  - You may define  "false path" between these mutually exclusive clocks
+
 **Master clock:** These are clocks which get defined at the main clcok source like oscillator/PLL. In a chip, master clock can be defined at some clock input ports too. When we define these master clocks, proper frequency and source information should be given. Uncertainity also should be specified.
-create_clock -name clock -period 4 [get_ports clock]
+##### >>create_clock -name clock -period 4 [get_ports clock]
+• The crete_clock cmd is used to create a clock at the specified source. A source
+can be defined at an input port of the design or an internal pin.
+• To create a clock on ports C1 and CK2 with a period of 10, a rising edge at 2, and falling edge at 4, enter the cmd
+##### >>create_clock –period 10 –waveform {2 4} [get_ports {C1 CK2}]
+• With this an ideal clock is created that ignores the delay effects of the clock
+network.
+**Gated Clock:**
+A gated clock is a clock signal under the control of gating logic.Tool performs both setup and hold checks on the gating clock.
 **Generated clock:** These are divider/multiplier clocks which get generated from a master clock. Mostly these are defined at the output of a clock divider like flipflop or mux. When we define a generated clock, its source clock, the generation point, division ration and uncertainity value should be provided. Generated clocks can be also defined at any point, if we need to define some exception wrt ths clock.
-create_generated_clock -name scan -period 8 -waveform [0 4] [get_ports clock]
+##### >>create_generated_clock -name scan -period 8 -waveform [0 4] [get_ports clock]
+• A generated Clock is a clock signal generated from another clock signal by a circuit within the design itself, such as a clock divider.
+• The create_generated_clock cmd is used to create generated clocks in which you can create frequency divided (-divide_by) or frequency multiplied (- multiply_by) clock.
+##### >>create_generated_clock –name dclk –source [get_ports CLK] –divide_by 2 [get_ports FF1/Q]
 **Virtual clock:** These are  clocks used to time the input/output port. These are imaginary clocks defines only with the clock wavaform and not having source/generation point.
-- For virtual clocks defined with the same create_clock command, network latency is
-calculated using the clock propagation delay of the boundary registers clocked by the
-individual virtual clocks.
+- For virtual clocks defined with the same create_clock command, network latency is calculated using the clock propagation delay of the boundary registers clocked by the individual virtual clocks.
+• A virtual clock has no actual source in the current design, but you can use it for setting input or output delays.
+• You can use virtual clock cmd to define virtual clocks for signals that interface to external clocked devices (other block).
+##### >> create_clock –period 8 –name vclk –waveform {0 4}
 - To adjust the I/O timing for virtual clocks, you must define the relationships between the virtual clocks and the real clocks before you adjust the I/O timing as follows:
 >> icc_shell> set_latency_adjustment_options -to_clock my_virtual_clock -from_clock my_real_clock
 icc_shell> update_clock_latency
+>> 
 ## Q. Types of latencies?
 Latency is the amount of time it takes for the clock signal to be propagated from the original
 clock source to the sequential elements in the design, consisting of two components, source
 latency and network latency. 
-- **Source latency**, also known as insertion delay, is the time it
-takes for a clock to be propagated from its ideal waveform origin point to the clock definition
-point in the design. 
-- **Network latency** is the time it takes for a clock to be propagated from the
-clock definition point in the design to a register clock pin.
+- **Source latency**, also known as insertion delay, is the time it takes for a clock to be propagated from its ideal waveform origin point to the clock definition point in the design. 
+- **Network latency** is the time it takes for a clock to be propagated from the clock definition point in the design to a register clock pin.
  
 - The total latency at a register clock pin is the sum of the source latency and network latency.
 
@@ -560,3 +585,17 @@ To set case analysis with a 0 value, enter
 ![image](https://github.com/user-attachments/assets/946e3ca4-3dca-4dae-ab77-0e3536418e7e)
 
 reference: Prime Time User Gude Page No. 10-4
+
+## Q. What is input delay and output delay?
+**Input Delays:**
+• In order to do the timing analysis in the paths like I2R and I2O, tool needs
+information about the arrival times of the signals at the input ports.
+• The set_input_delay cmd is used to specify the min and max amount of delay
+from a clock edge to the arrival of a signal at a specified input port.
+
+**Output Delays:**
+• In order to do the timing analysis in the paths like R2O and I2O, tool needs
+information about the timing requirements at the output ports.
+• The set_output_delay cmd is used to specify the min and max amount of delay
+between the output port and the external sequential device that captures the
+data from that output port is specified at that output port.
