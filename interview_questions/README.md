@@ -599,3 +599,7 @@ information about the timing requirements at the output ports.
 • The set_output_delay cmd is used to specify the min and max amount of delay
 between the output port and the external sequential device that captures the
 data from that output port is specified at that output port.
+
+## Q. How to resolve reference errors in synthesys?
+![image](https://github.com/user-attachments/assets/cb02f46f-1849-441d-bf84-3b7897468d3d)
+ 
