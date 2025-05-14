@@ -1,7 +1,7 @@
 This file contains my intervew experience on most commonly asked VLSI physical Design questions 
 #### what are the causes routing congestion?
 - Missing placement blockages
-- placing macros without gving routinig space for interconnections between macros
+- placing macros without giving routinig space for interconnections between macros
 - improper macro placement and macro channels (placing macros in the middle of the core area) 
 - High cell density(High local utilization)
 - If design has more No.of AOI/OAI cells you can see the congestion issue
@@ -9,6 +9,7 @@ This file contains my intervew experience on most commonly asked VLSI physical D
 - High pin density on one edge of the clock
 - too buffers added for optimization
 - Module splitting i.e., not applying bonds as needed
+#
 ## What are the congestion Fixes? 
 ### 1. Adding placement blockages in  channels and around macro corners
 ##### ##### icc_shell> create_placement_blockage -bbox {10 20 100 200}
@@ -149,7 +150,7 @@ the set_keepout_margin command, and all derived keepout margins for the specifie
 macro cells and standard cells.
 To remove the cell-specific keepout margins from your design, use the
 ##### remove_keepout_margin
-
+#
 ## Q. Placement optimizations? 4-30 page
 ##### place_opt --effort low | medium |high
                 -area_recovery
@@ -160,6 +161,7 @@ To remove the cell-specific keepout margins from your design, use the
                 -continue_on_missing_scandef
                 -congestion
                 -spg
+#
 ## Q. Optimizing Clock-Gating Logic? 4-38 page
 ##### Synthesis_stage: set_clock_gating_registers -include_instance [all_registers -clock clock]
 #####                  compile_ultra -gate_clock
@@ -167,11 +169,11 @@ To remove the cell-specific keepout margins from your design, use the
 ##### Placement stage: create_placement -optimize_icgs command 
 followed by the 
 ##### place_opt -optimize_icgs -skip_initial_placement
-
+#
 ## Q. Synthesis optimizations?
 ##### compile_ultra -gate_clock -timing_high_effort_script
 #####               -gate_clock -area_high_effort_script
-
+#
 ## Q. applying shielding on nets 7-43 page
 ##### i) Define the shielding rules.
 To define shielding rules, use the -shield_spacings and -shield_widths options of
@@ -183,6 +185,7 @@ ote:
 The **set_clock_tree_options** command assigns shielding rules to clock nets only **before clock tree synthesis**. 
 **After clock tree synthesis**, you must use the **set_net_routing_rule** command to assign shielding rules to clock nets.
 **create_zrt_shield -with_ground** To provide the most protection for critical clock nets, perform shielding on those nets after clock tree routing but before signal net routing.
+#
 ## Q. creating corners?
    **create_corner slow**
 ######             fast
@@ -191,7 +194,7 @@ The **set_clock_tree_options** command assigns shielding rules to clock nets onl
    **create_scenario -mode func -corner fast -name func_fast**
    **create_scenario  -mode func -corner slow -name func_slow**
 
-
+#
 ## Q. calculating delay through any net? 
 **TTo get a detailed report on the delay calculation at a given point along a timing path, use the
 report_delay_calculation command. This is the command syntax:
@@ -206,14 +209,16 @@ Specify the “from” and “to” pins of the cell or net that you want to rep
 be the input and output pins of a cell to report the calculation of a cell delay, or can be the
 driver pin and a load pin of a net to report the calculation of a net delay.**
 
-
+#
 ## Q. How many Modes, corners and scenarions there?
 Functional Mode: checking the functionality from one flop to other flop with high frequency clock
 Scan Mode: Applying the test vector to the input to test flop functionality
 Scan Capture Mode: Applying the test vectors to the input are to test the logical circuit present in between the flop. Uses same frequency as functionality frequency clock, if the functionality mode timing is clean then scan capture is also clean.
 Memory Built in self test: testing the circuit which is present inside the memory. Uses low frequency clock
+#
 ## Q. setting operating conditions?
 **set_operating_conditions -max WORST -max_library Typ.db -min BEST -min_library HoldTyp.db**
+#
 ## Q. report_timing options?
 report_timing Command Options
 The report_timing command offers a large number of options to control the scope of the
@@ -352,11 +357,11 @@ up to 50 worst maximum-delay paths per path group that have a slack less than 0.
 ##### prompt> report_timing -path end -max_paths 50 -slack_lesser_than 0.5
 The command reports the paths in order of slack, starting with the worst path, and continues
 until 50 paths have been reported or until the slack exceeds 0.5 time units.
-
+#
 ## Q. what is multipoint?
 MultiPoint CTS is a hybrid method of conventional CTS and clock mesh. The structure is shown in fig 1, which consists of a mesh driven by a pre-mesh tree. Multi Point drivers connect to the mesh at a limited number of locations referred to as taps. A multi-point clock tree structure driven by the mesh consists of subtrees, each driven by a tap.
 ![image](https://github.com/user-attachments/assets/fc62a037-aac9-4336-8e99-ca0c6f0f695d)
-
+#
 
 ## Q. Difference between the add_buffer_on_route and insert_buffer?
 ##### Use-case:
@@ -446,7 +451,7 @@ adding buffer at RS pin
 During synthesis or floorplanning/placement stages, to reduce fanout or meet setup/hold requirements.
 
 For proper clock tree synthesis or early timing optimization.
-
+#
 ## Q. what is Double Patterning?
 In doube patterning Method dense patterns of metals in a single mask is split into 2 different masks that can be interleaved/ spread to get the original pattern as desired.
 
@@ -463,13 +468,13 @@ Requires careful planning to make the two masks align perfectly
 
 create_track_pattern -layer M1 -site uint -type uniform -direction vertical -mas_pattern {mask_two mask_one} spacing 0.074 -offesets 0.037
 ![image](https://github.com/user-attachments/assets/0a18b921-57f1-4002-85b1-e71ffc4dc151)
-
+#
 ## Q. what is the difference between PnR routing and signoff routing?
 **signoff routing** is with accurate parasitic extraction (SPEF).Focuses on SI, EM and extraction accuracy. It only analyzes existing routes
 
 **PnR Routing**focusses on Meeting timing (setup/hold), DRC clean routing & Optimal wirelength and congestion reduction. Some corner cases might not be fully optimized (e.g., coupling, signal integrity).Some shortcuts are taken to prioritize runtime and convergence. It actually routes the nets
 Goal:Functional and timing-correct layout	
-
+#
 ## Q. Types of Clocks?
 The signal which is used to trigger all the sequential elements in the design.
 Types,
@@ -510,6 +515,7 @@ A gated clock is a clock signal under the control of gating logic.Tool performs 
 >> icc_shell> set_latency_adjustment_options -to_clock my_virtual_clock -from_clock my_real_clock
 icc_shell> update_clock_latency
 >> 
+#
 ## Q. Types of latencies?
 Latency is the amount of time it takes for the clock signal to be propagated from the original
 clock source to the sequential elements in the design, consisting of two components, source
@@ -538,11 +544,11 @@ For example, to set the expected rise latency to 1.2 and the fall latency to 0.9
 -                                Early/Late Source Latency Waveforms
 Removes user-specified clock network or sourceclock latency information from specified objects.
 >>remove_clock_latency 
-
+#
 ## Q. Types of Clock Sources?
 
 
-
+#
 ## Q. What is case analysis?
 
 In some designs, certain signals have a constant value in specific modes. For instance, in functional modes, the test signals do not toggle and are therefore tied either to VDD or VSS depending on their active level. This also applies to signals that do not toggle after the design has been powered up. In the same way, today's designs have multiple functional modes and some signals that are active in some of the functional modes might be inactive in other modes.
@@ -603,3 +609,23 @@ data from that output port is specified at that output port.
 ## Q. How to resolve reference errors in synthesys?
 ![image](https://github.com/user-attachments/assets/cb02f46f-1849-441d-bf84-3b7897468d3d)
  
+#
+## Q. How many PVT Corners are there inn your design?
+-Three corners,i)slow ii)typical iii)fast
+#
+## Q. What are the minimum and maximum voltages ini your design?
+min: Hold :ff0p8840c
+max: Setup: ss0p6120c
+#
+## Q. What is the use of physical aware synthesis?
+#
+## Q. Why timing violations will be in PnR though synthesis Timing report is clear?
+#
+## Q. How to creating pg vias from M1 layer to M8 layer?
+#
+## Q. On which parameter skew will be decided?
+#
+## Q. What will be the change in the cell for different VT cells?
+#
+## Q. What is the effect, if any VIA will be missed in PG network?
+#
