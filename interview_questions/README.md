@@ -629,3 +629,30 @@ max: Setup: ss0p6120c
 #
 ## Q. What is the effect, if any VIA will be missed in PG network?
 #
+## Q. what are LEGO values?
+#
+## Q. What might be reason for Power violation in M2 and M5?
+#
+## Q. What are the memory controllers used fo rthe Macros?
+#
+## Q. TCL Script for placing the Inputs and Output pins on the same metal layer?
+#
+## Q. TCL script for connectong input floating pin to nearest tie cells in a 3x3 after BTO?
+#
+## Q. What is Mother and Daughter routing?
+#
+## Q. What are routing groups?
+#
+## Q. What are Clock groups?
+#
+## Q. How +ve clock crosstalk to datapath setup?
+#
+## Q. What are power switches used in your design?
+#
+## Q. If there are timing violations in placement stage for reg2reg path 
+might be because of multiple logic logic levels 
+place_opt -retiming
+
+#
+## Q. If there is no Logical equivalence is not maintained then how will you deal in synthesis?
+#
