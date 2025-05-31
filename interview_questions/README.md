@@ -661,6 +661,7 @@ place_opt -retiming
 if the skew is not in limit , it is bad for hold
 #
 ## Q. How can you check the total no.of lines in a file with awk cmd?
+$awk 'END {print $NR}' Timing_report.rpt
 #
 ## Q. awk cmd to report startpoint, end point and the slack in a timing report?
 grep -E "startpoint|Endpoint|Slack" Timing_report.rpt | awk '/startpoint/ {start=$2} /Endpoint/ {end=$2} /slack/ {print start end $NF}
