@@ -656,3 +656,12 @@ place_opt -retiming
 #
 ## Q. If there is no Logical equivalence is not maintained then how will you deal in synthesis?
 #
+## Q. What happens if the skew is not within the limits or your clock tree skew is not balanced?
++ve is good for setup
+if the skew is not in limit , it is bad for hold
+#
+## Q. How can you check the total no.of lines in a file with awk cmd?
+#
+## Q. awk cmd to report startpoint, end point and the slack in a timing report?
+#
+##
